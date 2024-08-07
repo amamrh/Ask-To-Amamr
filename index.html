@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask to Ammar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #questionForm {
+            display: none;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 1rem 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        .admin-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="admin-panel.html" class="admin-link">Admin Login</a>
+    <div class="container">
+        <h1>Ask to Ammar</h1>
+        <button id="askButton">Ask Anything to Ammar</button>
+        <form id="questionForm">
+            <input type="text" id="questionInput" placeholder="Enter your question">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const askButton = document.getElementById('askButton');
+        const questionForm = document.getElementById('questionForm');
+        const questionInput = document.getElementById('questionInput');
+
+        askButton.addEventListener('click', () => {
+            askButton.style.display = 'none';
+            questionForm.style.display = 'block';
+        });
+
+        questionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const question = questionInput.value.trim();
+            if (question) {
+                if (typeof(Storage) !== "undefined") {
+                    const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+                    questions.push({
+                        id: Date.now(),
+                        text: question,
+                        date: new Date().toISOString(),
+                        status: 'new'
+                    });
+                    localStorage.setItem('questions', JSON.stringify(questions));
+                    questionInput.value = '';
+                    questionForm.style.display = 'none';
+                    askButton.style.display = 'block';
+                    alert('Your question has been submitted!');
+                } else {
+                    alert('Sorry, your browser does not support web storage. Your question cannot be saved.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

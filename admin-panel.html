@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Ask to Ammar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .question {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question p {
+            margin: 0 0 10px 0;
+        }
+        .meta {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .status {
+            display: inline-block;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        .status-new { background-color: #ff9800; color: white; }
+        .status-answered { background-color: #4caf50; color: white; }
+        .status-pending { background-color: #2196f3; color: white; }
+        #login-container {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .home-link {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">Back to Home</a>
+    <div class="container">
+        <h1>Admin Panel - Ask to Ammar</h1>
+        <div id="login-container">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+        </div>
+        <div id="questions-container" style="display: none;">
+            <!-- Questions will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        const questionsContainer = document.getElementById('questions-container');
+
+        function displayQuestions() {
+            if (typeof(Storage) !== "undefined") {
+                const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+                questionsContainer.innerHTML = ''; // Clear previous questions
+                if (questions.length === 0) {
+                    questionsContainer.innerHTML = '<p>No questions submitted yet.</p>';
+                } else {
+                    questions.forEach(q => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'question';
+                        questionDiv.innerHTML = `
+                            <p>${q.text}</p>
+                            <div class="meta">
+                                <span>ID: ${q.id}</span> | 
+                                <span>Date: ${new Date(q.date).toLocaleString()}</span> | 
+                                <span class="status status-${q.status}">${q.status.toUpperCase()}</span>
+                            </div>
+                        `;
+                        questionsContainer.appendChild(questionDiv);
+                    });
+                }
+            } else {
+                questionsContainer.innerHTML = '<p>Sorry, your browser does not support web storage.</p>';
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'myselfammar' && password === 'Ammar@125689') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('questions-container').style.display = 'block';
+                displayQuestions();
+                // Set up periodic refresh
+                setInterval(displayQuestions, 5000); // Refresh every 5 seconds
+            } else {
+                alert('Invalid credentials');
+            }
+        }
+    </script>
+</body>
+</html>
